@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Track pose durations using Teachable Machine models with real-time feedback and analytics">
+    <title>Pose Duration Tracker</title>
+
+    <!-- Favicon -->
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎯</text></svg>">
+
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+</head>
+
+<body>
+    <!-- Animated Background -->
+    <div class="bg-pattern"></div>
+
+    <!-- Toast Container -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <div class="logo">
+                <div class="logo-icon">🎯</div>
+                <h1>Pose Duration Tracker</h1>
+            </div>
+            <p class="subtitle">Track your poses with Machine Learning-powered precision</p>
+        </header>
+
+        <!-- Model Loading Section -->
+        <section id="model-section" class="card">
+            <div class="card-header">
+                <div class="card-icon">📦</div>
+                <h2 class="card-title">Load Your Teachable Machine Model</h2>
+            </div>
+
+            <p class="small-text">
+                Don't have a model? Create or train yours for free at
+                <a href="https://teachablemachine.withgoogle.com/" target="_blank" rel="noopener noreferrer">
+                    Teachable Machine
+                </a>.
+            </p>
+
+            <div class="input-group">
+                <input type="text" id="model-url"
+                    placeholder="Enter model URL (e.g., https://teachablemachine.withgoogle.com/models/abc123/)"
+                    aria-label="Teachable Machine model URL">
+            </div>
+
+            <div class="btn-group">
+                <button type="button" id="check-model-button" class="btn btn-primary">
+                    Load Model
+                </button>
+                <button type="button" id="test-webcam-button" class="btn btn-secondary" disabled>
+                    🎥 Test Webcam
+                </button>
+                <button type="button" id="stop-test-webcam-button" class="btn btn-danger hidden">
+                    ⏹ Stop Test
+                </button>
+            </div>
+
+            <div id="feedback" class="feedback"></div>
+
+            <!-- Settings Panel -->
+            <div class="settings-panel">
+                <div class="setting-item">
+                    <label class="setting-label" for="threshold-input">Confidence Threshold (%)</label>
+                    <input type="number" id="threshold-input" value="80" min="0" max="100" step="5"
+                        aria-label="Confidence threshold percentage">
+                </div>
+                <div class="setting-item">
+                    <span class="setting-label">Keyboard Shortcuts</span>
+                    <span class="setting-value">Space: Pause | Esc: End</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Task Section -->
+        <section id="task-section" class="card hidden">
+            <div class="card-header">
+                <div class="card-icon">🏃</div>
+                <h2 class="card-title">Pose Tracking</h2>
+            </div>
+
+            <div class="canvas-container">
+                <!-- Video Feed -->
+                <div class="video-wrapper">
+                    <canvas id="webcam-canvas" aria-label="Webcam feed with pose overlay"></canvas>
+
+                    <!-- Stats Overlay -->
+                    <div class="stats-overlay">
+                        <div class="stat-item">
+                            <span class="stat-label">Time</span>
+                            <span class="stat-value" id="task-timer">0.00s</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Pose</span>
+                            <span class="stat-value highlight" id="current-class">N/A</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Conf.</span>
+                            <span class="stat-value" id="current-probability">0%</span>
+                        </div>
+                    </div>
+
+                    <!-- Countdown -->
+                    <div id="countdown" class="countdown hidden">5</div>
+
+                    <!-- Pose Feedback -->
+                    <div id="feedback-message" class="pose-feedback none"></div>
+                </div>
+
+                <!-- Real-time Chart -->
+                <div id="bar-chart-container" class="chart-container hidden">
+                    <div class="chart-title">Real-time Confidence</div>
+                    <canvas id="bar-chart"></canvas>
+                </div>
+            </div>
+
+            <div class="btn-group" style="justify-content: center; margin-top: 1.5rem;">
+                <button type="button" id="start-task-button" class="btn btn-success" disabled>
+                    ▶ Start Task
+                </button>
+                <button type="button" id="pause-task-button" class="btn btn-secondary hidden">
+                    ⏸ Pause
+                </button>
+                <button type="button" id="end-task-button" class="btn btn-danger hidden">
+                    ⏹ End Task
+                </button>
+            </div>
+        </section>
+
+        <!-- Summary Section -->
+        <section id="summary-section" class="card hidden">
+            <div class="card-header">
+                <div class="card-icon">📊</div>
+                <h2 class="card-title">Session Summary</h2>
+            </div>
+
+            <!-- Summary Stats -->
+            <div class="summary-stats">
+                <div class="summary-stat">
+                    <div class="summary-stat-value" id="total-duration">0.00s</div>
+                    <div class="summary-stat-label">Total Duration</div>
+                </div>
+                <div class="summary-stat">
+                    <div class="summary-stat-value" id="poses-detected">0</div>
+                    <div class="summary-stat-label">Poses Detected</div>
+                </div>
+            </div>
+
+            <!-- Summary Table -->
+            <div id="summary-content">
+                <!-- Populated by JavaScript -->
+            </div>
+
+            <!-- Summary Chart -->
+            <div class="summary-chart-container">
+                <canvas id="summary-graph"></canvas>
+            </div>
+
+            <div class="btn-group" style="justify-content: center; margin-top: 1.5rem;">
+                <button type="button" id="export-button" class="btn btn-secondary">
+                    📥 Export CSV
+                </button>
+                <button type="button" id="restart-button" class="btn btn-primary">
+                    🔄 New Session
+                </button>
+            </div>
+        </section>
+
+        <!-- History Section -->
+        <section id="history-section" class="card">
+            <div class="card-header">
+                <div class="card-icon">📜</div>
+                <h2 class="card-title">Recent Sessions</h2>
+            </div>
+
+            <div id="history-list" class="history-list">
+                <!-- Populated by JavaScript -->
+            </div>
+
+            <div style="margin-top: 1rem;">
+                <button type="button" id="clear-history-button" class="btn btn-secondary" style="width: 100%;">
+                    🗑 Clear History
+                </button>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer style="text-align: center; padding: 2rem 0; color: var(--text-muted); font-size: 0.85rem;">
+            <p>Built by <a href="https://yongjin-l.github.io" target="_blank" rel="noopener"><span
+                        style="color: #fff;">Yongjin Lee</span></a> with
+                Teachable Machine</p>
+            <p style="margin-top: 0.5rem;">© 2025 Pose Duration Tracker</p>
+        </footer>
+    </div>
+
+    <!-- TensorFlow.js and Teachable Machine Pose -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.17.0/dist/tf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/pose@0.8/dist/teachablemachine-pose.min.js"></script>
+
+    <!-- Application JavaScript -->
+    <script src="{{ url_for('static', filename='js/pose-tracker.js') }}"></script>
+</body>
+
+</html>

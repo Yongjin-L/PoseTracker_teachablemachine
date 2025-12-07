@@ -1,1 +1,12 @@
-Flask==2.2.5
+# Pose Duration Tracker Dependencies
+# Python 3.8+ required
+
+# Web Framework
+Flask==3.0.0
+Werkzeug==3.0.1
+
+# Production WSGI Server (optional, for deployment)
+gunicorn==21.2.0
+
+# Environment variable management (optional)
+python-dotenv==1.0.0

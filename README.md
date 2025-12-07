@@ -1,105 +1,188 @@
-# Pose Duration Tracker with Mr. Lee
+# 🎯 Pose Duration Tracker
 
-A web application for tracking pose durations using Teachable Machine pose models. This tool allows users to load custom pose recognition models and measure the time spent in different poses. The code is developed with Claue 3.7 Sonnet and GPT-4o.
+A modern web application for tracking pose durations using Teachable Machine pose models. Features real-time feedback, accurate timing, session history, and data export.
 
-**[https://mc25.onrender.com/](https://mc25.onrender.com/)**
+**Live Demo:** [https://mc25.onrender.com/](https://mc25.onrender.com/)
 
-## Overview
+![Pose Tracker Screenshot](https://via.placeholder.com/800x400/0f0f23/7c3aed?text=Pose+Duration+Tracker)
 
-This application enables users to:
-- Load Teachable Machine pose models via URL
-- Test webcam functionality
-- Track and time different poses in real-time
-- View pose recognition probabilities via live charts
-- Generate summaries of pose durations after each session
+## ✨ Features
 
-Perfect for physical education, dance instruction, yoga practice, or any activity requiring pose tracking and duration measurement.
+- **🤖 AI-Powered Detection** - Load any Teachable Machine pose model via URL
+- **📊 Real-time Visualization** - Live confidence charts and pose skeleton overlay
+- **⏱️ Accurate Timing** - Frame-accurate duration tracking using delta time
+- **⏸️ Pause/Resume** - Full control over your tracking sessions
+- **💾 Session History** - Automatic saving to local storage
+- **📥 CSV Export** - Download your session data for analysis
+- **⌨️ Keyboard Shortcuts** - Space to pause, Escape to end
+- **📱 Responsive Design** - Works on desktop and mobile devices
+- **♿ Accessible** - Keyboard navigation and screen reader support
 
-## Features
+## 🚀 Quick Start
 
-- **Model Loading**: Load any Teachable Machine pose model via URL
-- **Webcam Integration**: Test and use webcam for pose detection
-- **Real-time Visualization**: 
-  - Live pose skeleton overlay
-  - Real-time probability bar chart
-  - Status feedback for pose detection quality
-- **Duration Tracking**: Automatic tracking of time spent in each detected pose
-- **Summary Reporting**: End-of-session summary with total durations by pose
-- **Responsive Design**: Works on various screen sizes
+### Prerequisites
 
-## Requirements
+- Python 3.8+
+- Modern web browser (Chrome, Firefox, Safari, Edge)
+- Webcam
 
-- A modern web browser (Chrome, Firefox, Safari, Edge)
-- Webcam access
-- Internet connection (for loading required libraries)
-- A Teachable Machine pose model URL
+### Installation
 
-## Usage Instructions
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/yourusername/PoseTracker_teachablemachine.git
+   cd PoseTracker_teachablemachine
+   ```
 
-1. **Load Model**:
-   - Enter a valid Teachable Machine pose model URL in the input field
-   - Click "Check Model URL" to validate and load the model
-   - Example URL format: `https://teachablemachine.withgoogle.com/models/YOUR_MODEL_ID/`
+2. **Create virtual environment** (recommended)
+   ```bash
+   python -m venv venv
+   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   ```
 
-2. **Test Your Webcam**:
-   - Click "Test Webcam" to ensure your camera is working correctly
-   - Click "Stop Test" when finished
+3. **Install dependencies**
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-3. **Start the Task**:
-   - Click "Start Task" to begin pose tracking
-   - A 5-second countdown will appear before tracking starts
-   - The application will display:
-     - Current pose class
-     - Confidence percentage
-     - Elapsed time
-     - Visual feedback on pose quality
+4. **Run the application**
+   ```bash
+   # Development mode
+   FLASK_ENV=development python app.py
+   
+   # Production mode
+   python app.py
+   ```
 
-4. **End the Task**:
-   - Click "End Task" when you're finished
-   - A summary will display showing:
-     - Total session duration
-     - Bar chart of time spent in each detected pose
+5. **Open in browser**
+   Navigate to `http://localhost:5000`
 
-5. **Restart**:
-   - Click "Restart" to begin a new session
+## 📖 Usage
 
-## Creating a Teachable Machine Pose Model
+### 1. Load Your Model
 
-If you don't have a pose model URL, you can create one:
+Enter a Teachable Machine pose model URL:
+```
+https://teachablemachine.withgoogle.com/models/YOUR_MODEL_ID/
+```
+
+### 2. Configure Settings
+
+- **Confidence Threshold** - Minimum confidence % to count as a detected pose (default: 80%)
+
+### 3. Test Your Webcam
+
+Click "Test Webcam" to verify your camera is working correctly before starting.
+
+### 4. Start Tracking
+
+1. Click **Start Task**
+2. Wait for the 5-second countdown
+3. Strike your poses!
+4. Use **Space** to pause/resume
+5. Use **Escape** or click **End Task** to finish
+
+### 5. Review & Export
+
+- View your session summary with duration breakdown
+- Export data as CSV for further analysis
+- Session history is automatically saved
+
+## 🔧 Configuration
+
+### Environment Variables
+
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `SECRET_KEY` | Flask secret key for sessions | Random bytes |
+| `FLASK_ENV` | Set to `development` for debug mode | `production` |
+| `PORT` | Server port | `5000` |
+
+### Example `.env` file
+
+```env
+SECRET_KEY=your-super-secret-key-here
+FLASK_ENV=development
+PORT=5000
+```
+
+## 📁 Project Structure
+
+```
+PoseTracker_teachablemachine/
+├── app.py                 # Flask application
+├── requirements.txt       # Python dependencies
+├── README.md             # This file
+├── netlify.toml          # Netlify configuration
+├── templates/
+│   └── index.html        # Main HTML template
+└── static/
+    ├── css/
+    │   └── styles.css    # Modern styling
+    └── js/
+        └── pose-tracker.js  # Application logic
+```
+
+## 🎨 Creating a Teachable Machine Model
 
 1. Visit [Teachable Machine](https://teachablemachine.withgoogle.com/)
-2. Select "New Project" and choose "Pose Project"
+2. Click **Get Started** → **Pose Project**
 3. Create classes for each pose you want to track
 4. Train your model using the webcam
-5. Export your model and choose "Tensorflow.js"
-6. Select "Upload my model" or "Get shareable link"
-7. Copy the URL provided to use in this application
+5. Click **Export Model** → **Tensorflow.js** → **Upload**
+6. Copy the shareable URL
 
-## Technical Details
+## 🛠️ Development
 
-This application uses:
-- Flask (Python web framework)
-- TensorFlow.js
-- Teachable Machine Pose library
-- Chart.js for data visualization
+### Running in Development Mode
 
-## Customization
+```bash
+FLASK_ENV=development python app.py
+```
 
-You can modify the application by editing the HTML and JavaScript in the `HTML_PAGE` variable in the Flask application file.
+### Running with Gunicorn (Production)
 
-## Troubleshooting
+```bash
+gunicorn app:app --bind 0.0.0.0:5000
+```
 
-- **Model Not Loading**: Ensure the URL is correct and includes the trailing slash
-- **Webcam Not Working**: Check browser permissions and ensure no other application is using the webcam
-- **Poor Pose Detection**: Ensure good lighting and clear visibility of your full body in the camera frame
+## 🚀 Deployment
 
-## License
+### Render
 
-MIT License
-Copyright (c) 2025 Yongjin Lee
+1. Connect your GitHub repository
+2. Set build command: `pip install -r requirements.txt`
+3. Set start command: `gunicorn app:app`
+4. Add environment variables as needed
 
-## Acknowledgments
+### Heroku
+
+```bash
+heroku create your-app-name
+git push heroku main
+```
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## 📝 License
+
+MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🙏 Acknowledgments
 
 - [Teachable Machine](https://teachablemachine.withgoogle.com/) by Google
 - [TensorFlow.js](https://www.tensorflow.org/js)
 - [Chart.js](https://www.chartjs.org/)
+- [Flask](https://flask.palletsprojects.com/)
+
+---
+
+Made with ❤️ by Yongjin Lee
