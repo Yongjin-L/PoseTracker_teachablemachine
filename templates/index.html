@@ -60,7 +60,7 @@
                 <button type="button" id="check-model-button" class="btn btn-primary">
                     Load Model
                 </button>
-                <button type="button" id="test-webcam-button" class="btn btn-secondary" disabled>
+                <button type="button" id="test-webcam-button" class="btn btn-secondary">
                     🎥 Test Webcam
                 </button>
                 <button type="button" id="stop-test-webcam-button" class="btn btn-danger hidden">
@@ -206,7 +206,8 @@
     </div>
 
     <!-- TensorFlow.js and Teachable Machine Pose -->
-    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.17.0/dist/tf.min.js"></script>
+    <!-- IMPORTANT: These specific versions are required for compatibility -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.3.1/dist/tf.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/pose@0.8/dist/teachablemachine-pose.min.js"></script>
 
     <!-- Application JavaScript -->

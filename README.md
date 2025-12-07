@@ -4,7 +4,8 @@ A modern web application for tracking pose durations using Teachable Machine pos
 
 **Live Demo:** [https://mc25.onrender.com/](https://mc25.onrender.com/)
 
-![Pose Tracker Screenshot](https://via.placeholder.com/800x400/0f0f23/7c3aed?text=Pose+Duration+Tracker)
+<!-- Pose Tracker Screenshot -->
+<img src="image.png" alt="Screenshot of Pose Duration Tracker app" width="100%" style="border:1px solid #ddd; border-radius:8px; margin:1em 0;">
 
 ## ✨ Features
 

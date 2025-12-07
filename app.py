@@ -53,7 +53,8 @@ def server_error(error):
 
 if __name__ == "__main__":
     # Get port from environment variable (for deployment platforms like Render, Heroku)
-    port = int(os.environ.get("PORT", 5000))
+    # Default to 5001 to avoid conflict with macOS AirPlay Receiver on port 5000
+    port = int(os.environ.get("PORT", 5001))
 
     # Only enable debug mode in development
     debug_mode = os.environ.get('FLASK_ENV') == 'development'
